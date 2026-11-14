@@ -1,0 +1,29 @@
+{
+  "name": "trekgear-hub",
+  "version": "1.0.0",
+  "description": "TrekGear Hub - Trekking Tent Rental Management System Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "init-db": "node database/init.js",
+    "test": "node --test tests/api.test.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "sqlite3",
+    "backend",
+    "tent-rental",
+    "rest-api"
+  ],
+  "author": "College Backend Development Fundamentals Team",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  }
+}

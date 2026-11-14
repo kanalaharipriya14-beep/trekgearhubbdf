@@ -1,0 +1,1008 @@
+{
+  "info": {
+    "_postman_id": "7a94b59f-c947-49f3-8b77-trekgearhub01",
+    "name": "TrekGear Hub API",
+    "description": "Complete Postman collection for TrekGear Hub - Trekking Tent Rental Management System API.\nIncludes all endpoints, CRUD operations, JOIN queries, search filters, input validations, and the three required Special Twist test cases.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Tents (CRUD & Search)",
+      "item": [
+        {
+          "name": "GET All Tents",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array of tents\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "    pm.expect(jsonData.length).to.be.at.least(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents"]
+            },
+            "description": "Retrieves the full list of all tents in the inventory."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Search Tents by Size (?size=2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"All returned tents have size 2\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "    jsonData.forEach(function(tent) {",
+                  "        pm.expect(tent.size).to.eql(2);",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents?size=2",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents"],
+              "query": [
+                {
+                  "key": "size",
+                  "value": "2",
+                  "description": "Filter by tent capacity (size)"
+                }
+              ]
+            },
+            "description": "Searches and filters tents by capacity size."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Search Tents by Status (?status=available)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"All returned tents have status available\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.forEach(function(tent) {",
+                  "        pm.expect(tent.status).to.eql(\"available\");",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents?status=available",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "available"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Search Tents by Name (?search=Dome)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returned tents match search query\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.some(t => t.name.includes(\"Dome\"))).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents?search=Dome",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Dome"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Tent by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns tent with tent_id 8\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.tent_id).to.eql(8);",
+                  "    pm.expect(jsonData.name).to.eql(\"Alpine Explorer 4P\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents/8",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "8"]
+            },
+            "description": "Retrieves a single tent by its tent_id."
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Tent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Returns created tent object\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.include(\"created successfully\");",
+                  "    pm.expect(jsonData.tent.name).to.eql(\"Summit Explorer 3P\");",
+                  "    pm.expect(jsonData.tent.size).to.eql(3);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Summit Explorer 3P\",\n  \"size\": 3,\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tents",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents"]
+            },
+            "description": "Creates a new tent in the inventory."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Tent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns updated tent object\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.tent.name).to.eql(\"TrailDome 2P Pro\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TrailDome 2P Pro\",\n  \"size\": 2,\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tents/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "1"]
+            },
+            "description": "Updates an existing tent by its ID."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Tent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 (or 404 if already deleted)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents/10",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "10"]
+            },
+            "description": "Deletes an unrented tent by ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Tents Validation Errors",
+      "item": [
+        {
+          "name": "POST Create Tent - Missing Name (Expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Validation error mentions name\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.error).to.eql(\"Validation failed\");",
+                  "    pm.expect(jsonData.details.some(d => d.includes(\"name\"))).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"size\": 3,\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tents",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Tent - Invalid Size (Expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Validation error mentions size\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.details.some(d => d.includes(\"size\"))).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Zero Size Tent\",\n  \"size\": 0,\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tents",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Tent - Invalid Status (Expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Validation error mentions status\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.details.some(d => d.includes(\"status\"))).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Damaged Tent\",\n  \"size\": 2,\n  \"status\": \"broken_fabric\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tents",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Tent by ID - Not Found (Expect 404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents/9999",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "9999"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Tent by ID - Invalid ID Format (Expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents/notanumber",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "notanumber"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Trekkers",
+      "item": [
+        {
+          "name": "GET All Trekkers",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns array of trekkers\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/trekkers",
+              "host": ["{{baseUrl}}"],
+              "path": ["trekkers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Trekker by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns trekker object\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.trekker_id).to.eql(1);",
+                  "    pm.expect(jsonData.name).to.eql(\"Alex Rivera\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/trekkers/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["trekkers", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Trekker",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Returns created trekker\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.trekker.name).to.eql(\"Carlos Gomez\");",
+                  "    pm.expect(jsonData.trekker.email).to.eql(\"carlos.gomez@example.com\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos Gomez\",\n  \"email\": \"carlos.gomez@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/trekkers",
+              "host": ["{{baseUrl}}"],
+              "path": ["trekkers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Trekker - Invalid Email (Expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bad Email Person\",\n  \"email\": \"not-a-valid-email\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/trekkers",
+              "host": ["{{baseUrl}}"],
+              "path": ["trekkers"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Rentals & JOIN",
+      "item": [
+        {
+          "name": "GET Rentals with JOIN Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Each rental contains trekker name and tent name from JOIN\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "    jsonData.forEach(function(rental) {",
+                  "        pm.expect(rental).to.have.property(\"rental_id\");",
+                  "        pm.expect(rental).to.have.property(\"trekker_name\");",
+                  "        pm.expect(rental).to.have.property(\"tent_name\");",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["rentals"]
+            },
+            "description": "Required JOIN endpoint returning rental details joined with trekker and tent names."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Rentals Details Endpoint (JOIN Alias)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Returns joined rental details\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData[0]).to.have.property(\"trekker_name\");",
+                  "    pm.expect(jsonData[0]).to.have.property(\"tent_name\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rentals/details",
+              "host": ["{{baseUrl}}"],
+              "path": ["rentals", "details"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Single Rental by ID (JOIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Rental 2 has tent Alpine Explorer 4P and trekker Maya Lin\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.rental_id).to.eql(2);",
+                  "    pm.expect(jsonData.tent_id).to.eql(8);",
+                  "    pm.expect(jsonData.tent_name).to.eql(\"Alpine Explorer 4P\");",
+                  "    pm.expect(jsonData.trekker_name).to.eql(\"Maya Lin\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rentals/2",
+              "host": ["{{baseUrl}}"],
+              "path": ["rentals", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Valid Rental",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Returns new rental object\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.include(\"Rental created\");",
+                  "    pm.expect(jsonData.rental.tent_id).to.eql(3);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trekker_id\": 1,\n  \"tent_id\": 3,\n  \"start_date\": \"2026-12-01\",\n  \"end_date\": \"2026-12-05\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["rentals"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Rental - Prevent Double-Booking (Expect 409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 409 Conflict\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"Error mentions double-booking\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.error).to.include(\"already booked\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trekker_id\": 1,\n  \"tent_id\": 8,\n  \"start_date\": \"2026-11-11\",\n  \"end_date\": \"2026-11-14\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["rentals"]
+            },
+            "description": "Attempts to book Tent 8 when already rented from Nov 10 to Nov 12."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Special Twist Tests",
+      "item": [
+        {
+          "name": "Test 1: Rental End Date Before Start Date (Expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Error specifies end date cannot be earlier than start date\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.error).to.eql(\"End date cannot be earlier than start date.\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trekker_id\": 1,\n  \"tent_id\": 4,\n  \"start_date\": \"2026-11-15\",\n  \"end_date\": \"2026-11-10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["rentals"]
+            },
+            "description": "Required Test 1: A rental with end_date earlier than start_date must return HTTP 400."
+          },
+          "response": []
+        },
+        {
+          "name": "Test 2: Check Availability on Nov 11 (Tent 8 must NOT appear)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Tent 8 is actively rented and does NOT appear in available list\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "    var tent8 = jsonData.find(function(t) { return t.tent_id === 8; });",
+                  "    pm.expect(tent8).to.be.undefined;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents/available?date=2026-11-11",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "available"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-11-11",
+                  "description": "Checking middle date of Nov 10 to Nov 12 rental"
+                }
+              ]
+            },
+            "description": "Required Test 2: Tent 8 rented from November 10 to November 12 must not appear when checking November 11."
+          },
+          "response": []
+        },
+        {
+          "name": "Test 3: Check Availability on Nov 13 (Tent 8 MUST appear)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Tent 8 rental has ended and MUST appear in available list\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "    var tent8 = jsonData.find(function(t) { return t.tent_id === 8; });",
+                  "    pm.expect(tent8).to.not.be.undefined;",
+                  "    pm.expect(tent8.tent_id).to.eql(8);",
+                  "    pm.expect(tent8.name).to.eql(\"Alpine Explorer 4P\");",
+                  "    pm.expect(tent8.status).to.eql(\"available\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents/available?date=2026-11-13",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "available"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-11-13",
+                  "description": "Checking date immediately after Nov 10-12 rental ends"
+                }
+              ]
+            },
+            "description": "Required Test 3: The same Tent 8 must appear when checking November 13, provided its status is available and there is no other rental."
+          },
+          "response": []
+        },
+        {
+          "name": "Twist Validation: Missing Date Parameter (Expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Error mentions date parameter required\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.error).to.include(\"Query parameter 'date' is required\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents/available",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "available"]
+            },
+            "description": "Validates that GET /tents/available rejects requests missing the ?date query parameter."
+          },
+          "response": []
+        },
+        {
+          "name": "Twist Validation: Invalid Date Format (Expect 400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Error mentions invalid date format\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.error).to.include(\"Invalid date format\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tents/available?date=2026-13-45",
+              "host": ["{{baseUrl}}"],
+              "path": ["tents", "available"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-13-45"
+                }
+              ]
+            },
+            "description": "Validates that GET /tents/available rejects invalid calendar dates or malformed strings."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+
